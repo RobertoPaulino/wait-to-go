@@ -50,16 +50,11 @@ func updateStatusByEntry(db *sql.DB, entry Entry) error {
 	return err
 }
 
-func getWaitingEntry(db *sql.DB, entryList *[]Entry) {
+func getWaitingEntry(db *sql.DB) []Entry {
 
-	var firstName string
-	var lastName string
-	var email string
-	var phoneNumber string
-	var status string
-	var joinTime time.Time
+	var entries []Entry
 
-	query := `SELECT firstName, lastName, email, phoneNumber, status, joinTime FROM entry WHERE status = 'waiting'`
+	query := `SELECT id, firstName, lastName, email, phoneNumber, status, joinTime FROM entry WHERE status = 'waiting'`
 	rows, err := db.Query(query)
 
 	if err != nil {
@@ -73,15 +68,20 @@ func getWaitingEntry(db *sql.DB, entryList *[]Entry) {
 	defer rows.Close()
 
 	for rows.Next() {
-		err := rows.Scan(&firstName, &lastName, &email, &phoneNumber, &status, &joinTime)
+
+		var id int
+		var firstName, lastName, email, phoneNumber, status string
+		var joinTime time.Time
+
+		err := rows.Scan(&id, &firstName, &lastName, &email, &phoneNumber, &status, &joinTime)
 
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		*entryList = append(*entryList, Entry{firstName, lastName, email, phoneNumber, status, joinTime})
+		entries = append(entries, Entry{id, firstName, lastName, email, phoneNumber, status, joinTime})
 	}
-
+	return entries
 }
 
 func backupHistory(db *sql.DB, historyList *[]Entry) {
