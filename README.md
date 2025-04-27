@@ -21,12 +21,12 @@ Wait-to-Go is a robust queue management system designed for businesses that need
 
 ### Key Features
 
-- 🔐 Secure authentication for customers and admins
-- 📱 Responsive web interface
-- 🔄 Real-time queue updates
-- 📊 Admin dashboard
-- 🚀 Easy deployment
-- 🧪 Comprehensive test coverage
+- Secure authentication for customers and admins
+- Responsive web interface
+- Real-time queue updates
+- Admin dashboard
+- Easy deployment
+- Comprehensive test coverage
 
 ## Project Structure
 
@@ -177,10 +177,9 @@ This project is licensed under the GNU General Public License v2.0 - see the [LI
 - [Go](https://golang.org/) - Backend language
 - [PostgreSQL](https://www.postgresql.org/) - Database
 - [JWT](https://jwt.io/) - Authentication
-- Contributors & maintainers
 
 ---
 
 <div align="center">
-Made with ❤️ by the Wait-to-Go team
+An open source project
 </div>
