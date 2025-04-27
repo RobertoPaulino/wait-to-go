@@ -12,7 +12,7 @@ type App struct {
 }
 
 type Entry struct {
-	ID          int       `json:"-"`
+	ID          int       `json:"id"`
 	FirstName   string    `json:"firstName"`
 	LastName    string    `json:"lastName"`
 	Email       string    `json:"email"`
