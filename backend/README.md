@@ -22,7 +22,7 @@ The service uses the following environment variables:
 
 ### Security Configuration
 - `JWT_SECRET` (default: "your-256-bit-secret") - Change this in production!
-- `ADMIN_API_KEY` (default: "default-admin-key") - Change this in production!
+- `ADMIN_API_KEY` (default: none) - Initial admin API key. Additional keys can be added programmatically.
 
 ## API Endpoints
 
@@ -49,11 +49,43 @@ When a customer joins the queue, they receive a JWT token. This token should be 
 Authorization: Bearer <token>
 ```
 
+Features:
+- JWT tokens expire after 24 hours
+- Contains customer ID and phone number
+- Rate limited to 30 requests per minute per IP
+
 ### Admin Authentication
 Admin endpoints require an API key to be included in the request header:
 ```bash
 X-API-Key: <your-admin-key>
 ```
+
+Features:
+- Support for multiple admin API keys
+- Keys are securely hashed using bcrypt
+- Each key stores creation and last used timestamps
+- Rate limited to 100 requests per minute per IP
+- Keys can be added and removed programmatically
+
+## Security Features
+
+1. Rate Limiting
+   - Customer endpoints: 30 requests per minute per IP
+   - Admin endpoints: 100 requests per minute per IP
+   - Prevents brute force attacks and DoS attempts
+
+2. JWT Security
+   - Tokens expire after 24 hours
+   - Signed using HMAC-SHA256
+   - Contains minimal required claims
+   - Validates signing method
+
+3. Admin API Key Security
+   - Keys are hashed using bcrypt
+   - Support for multiple active keys
+   - Key rotation capability
+   - Usage tracking
+   - No plaintext storage
 
 ## Running the Service
 
@@ -94,8 +126,11 @@ curl -H "X-API-Key: <your-admin-key>" \
 
 ## Security Considerations
 
-1. Always change the default JWT secret and admin API key in production
+1. Always change the default JWT secret in production
 2. Use HTTPS in production
-3. Consider implementing rate limiting for production use
-4. Store sensitive environment variables securely
-5. Regularly rotate the admin API key
+3. Implement proper key rotation procedures
+4. Monitor rate limit violations
+5. Store sensitive environment variables securely
+6. Regularly audit admin key usage
+7. Consider implementing IP allowlisting for admin endpoints
+8. Use secure headers (HSTS, CSP, etc.) in production
