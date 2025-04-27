@@ -1,185 +1,53 @@
-# Wait-to-Go
+# Wait-to-Go Demo Frontend
 
-<div align="center">
-
-[![License](https://img.shields.io/badge/license-GPL%20v2-blue.svg)](LICENSE)
-[![Go Version](https://img.shields.io/badge/go-1.24-blue.svg)](https://golang.org/dl/)
-[![PostgreSQL](https://img.shields.io/badge/postgresql-latest-blue.svg)](https://www.postgresql.org/)
-
-A modern, secure queue management system built with Go and JavaScript.
-
-[Getting Started](#getting-started) •
-[Features](#features) •
-[Documentation](#documentation) •
-[Contributing](#contributing)
-
-</div>
-
-## Overview
-
-Wait-to-Go is a robust queue management system designed for businesses that need to manage customer waiting lists efficiently. It features a secure backend built with Go, a responsive frontend interface, and comprehensive authentication systems for both customers and administrators.
-
-### Key Features
-
-- Secure authentication for customers and admins
-- Responsive web interface
-- Real-time queue updates
-- Admin dashboard
-- Easy deployment
-- Comprehensive test coverage
-
-## Project Structure
-
-```
-wait-to-go/
-├── backend/         # Go backend service
-│   ├── auth/       # Authentication system
-│   ├── tests/      # Test suites
-│   └── README.md   # Backend documentation
-├── frontend/       # Frontend implementations
-│   ├── production/ # Production frontend
-│   └── demo/       # Demo version (static)
-```
-
-## Getting Started
-
-### Prerequisites
-
-- Go 1.24 or later
-- PostgreSQL
-- Node.js (optional, for development)
-- Docker (optional)
-
-### Quick Start
-
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/yourusername/wait-to-go.git
-   cd wait-to-go
-   ```
-
-2. **Set Up the Backend**
-   ```bash
-   cd backend
-   cp .env.example .env  # Configure your environment variables
-   go mod download
-   go run .
-   ```
-
-3. **Start the Frontend**
-   ```bash
-   cd frontend/production
-   python -m http.server 3000  # Or any static file server
-   ```
-
-4. Visit `http://localhost:3000` in your browser
-
-### Demo Version
-
-For a quick demo without backend setup:
-```bash
-cd frontend/demo
-python -m http.server 3000
-```
+This is a demo version of the Wait-to-Go queue management system that runs entirely in the browser without requiring a backend server. It uses browser's local storage to simulate a backend, making it perfect for demonstrations and testing.
 
 ## Features
 
-### Customer Features
-- Join queue with name and phone number
-- Receive unique access token
-- Track position in queue
-- Real-time status updates
-- Mobile-friendly interface
+- Join the queue with your information
+- Check your position in the queue using your queue ID
+- Admin interface to manage the queue
+- Simulated backend using browser's local storage
+- Real-time queue updates in the admin view
 
-### Admin Features
-- Secure admin dashboard
-- View and manage entire queue
-- Notify next customer
-- Mark customers as served
-- Queue analytics
-- Multiple admin support
+## Running the Demo
 
-### Security Features
-- JWT authentication for customers
-- Bcrypt-hashed admin keys
-- Rate limiting protection
-- Input validation
-- Secure headers
-- CORS protection
+1. Simply serve this directory using any HTTP server. For example:
+   ```bash
+   python -m http.server 3000
+   ```
+   or
+   ```bash
+   npx serve .
+   ```
 
-## Documentation
+2. Open your browser and navigate to:
+   - If using Python: `http://localhost:3000`
+   - If using npx serve: `http://localhost:3000`
 
-### API Endpoints
+## How It Works
 
-#### Public Endpoints
-- `POST /join` - Add new entry to queue
-- `GET /status/{id}` - Check entry status (requires JWT)
+- All data is stored in your browser's local storage
+- Queue operations are simulated with a small delay to mimic real network requests
+- The queue state persists until you clear your browser data or use the "Clear Queue" function
+- No actual backend server is required
 
-#### Admin Endpoints
-- `GET /queue` - View current queue
-- `POST /next` - Notify next in line
-- `POST /serve` - Mark as served
-- `POST /clear` - Clear queue
+## Testing the Demo
 
-For detailed API documentation, see [backend/README.md](backend/README.md).
+1. Join Queue:
+   - Fill in the form with your name and optional contact details
+   - Submit to receive a queue ID
 
-## Development
+2. Check Status:
+   - Use your queue ID to check your position
+   - See who is currently being served
 
-### Running Tests
-```bash
-cd backend
-go test ./... -v
-```
+3. Admin Functions:
+   - View all entries in the queue
+   - Call the next person
+   - Mark entries as served
+   - Clear the entire queue
 
-### Environment Variables
+## Note
 
-Backend configuration (`.env`):
-```bash
-JWT_SECRET=your-256-bit-secret
-ADMIN_API_KEY=your-admin-key
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=waitdb
-DB_USER=postgres
-DB_PASSWORD=secret
-```
-
-## Deployment
-
-### Docker Deployment
-```bash
-docker-compose up -d
-```
-
-### Manual Deployment
-1. Set up PostgreSQL database
-2. Configure environment variables
-3. Build and run the Go backend
-4. Serve the frontend using Nginx/Apache
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-### Development Process
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to your fork
-5. Submit a pull request
-
-## License
-
-This project is licensed under the GNU General Public License v2.0 - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- [Go](https://golang.org/) - Backend language
-- [PostgreSQL](https://www.postgresql.org/) - Database
-- [JWT](https://jwt.io/) - Authentication
-
----
-
-<div align="center">
-An open source project
-</div>
+This is a demo version for testing and demonstration purposes. For production use, please use the main Wait-to-Go application with a proper backend server. 
