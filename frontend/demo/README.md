@@ -1,36 +1,53 @@
 # Wait-to-Go Demo Frontend
 
-This is the demo version of Wait-to-Go's frontend, designed to work without a backend server. It simulates all backend functionality in JavaScript, making it perfect for static hosting and demonstrations.
+This is a demo version of the Wait-to-Go queue management system that runs entirely in the browser without requiring a backend server. It uses browser's local storage to simulate a backend, making it perfect for demonstrations and testing.
 
 ## Features
 
-- Identical UI to the production version
-- Simulated backend functionality
-- No server requirements
-- Perfect for GitHub Pages or other static hosting
-- Great for testing and demonstrations
+- Join the queue with your information
+- Check your position in the queue using your queue ID
+- Admin interface to manage the queue
+- Simulated backend using browser's local storage
+- Real-time queue updates in the admin view
 
-## Usage
+## Running the Demo
 
-Simply open `index.html` in a web browser or host the contents of this directory on any static file hosting service.
+1. Simply serve this directory using any HTTP server. For example:
+   ```bash
+   python -m http.server 3000
+   ```
+   or
+   ```bash
+   npx serve .
+   ```
 
-## Development
+2. Open your browser and navigate to:
+   - If using Python: `http://localhost:3000`
+   - If using npx serve: `http://localhost:3000`
 
-The demo version uses:
-- HTML5 for structure
-- CSS3 for styling
-- JavaScript for both UI and simulated backend functionality
+## How It Works
 
-### Key Differences from Production
+- All data is stored in your browser's local storage
+- Queue operations are simulated with a small delay to mimic real network requests
+- The queue state persists until you clear your browser data or use the "Clear Queue" function
+- No actual backend server is required
 
-- Uses `MockBackend` class instead of real API calls
-- Stores data in browser's localStorage
-- Simulates network latency for realistic feel
-- Maintains queue state in memory
+## Testing the Demo
 
-## Files
+1. Join Queue:
+   - Fill in the form with your name and optional contact details
+   - Submit to receive a queue ID
 
-- `index.html` - Main entry point
-- `styles/` - CSS stylesheets
-- `scripts/` - JavaScript files, including backend simulation
-- `assets/` - Images and other static assets 
+2. Check Status:
+   - Use your queue ID to check your position
+   - See who is currently being served
+
+3. Admin Functions:
+   - View all entries in the queue
+   - Call the next person
+   - Mark entries as served
+   - Clear the entire queue
+
+## Note
+
+This is a demo version for testing and demonstration purposes. For production use, please use the main Wait-to-Go application with a proper backend server. 

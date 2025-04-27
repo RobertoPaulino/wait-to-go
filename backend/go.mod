@@ -1,5 +1,9 @@
-module github.com/robertopaulino
+module wait-to-go
 
-go 1.24.2
+go 1.24
 
-require github.com/lib/pq v1.10.9 // indirect
+require (
+	github.com/golang-jwt/jwt/v5 v5.0.0
+	github.com/joho/godotenv v1.5.1
+	github.com/lib/pq v1.10.9
+)

@@ -7,6 +7,9 @@ import (
 	"net/http"
 	"os"
 
+	"wait-to-go/auth"
+
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -40,6 +43,11 @@ func getEnvOrDefault(key, defaultValue string) string {
 }
 
 func main() {
+	// Load .env file if it exists
+	if err := godotenv.Load(); err != nil {
+		log.Printf("No .env file found")
+	}
+
 	config, err := loadConfig()
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
@@ -87,14 +95,20 @@ func main() {
 		history: &historySlice,
 	}
 
-	// Setup routes
+	// Setup routes with CORS and authentication middleware
 	mux := http.NewServeMux()
-	mux.HandleFunc("/join", app.handleJoin)
-	mux.HandleFunc("/queue", app.handleQueue)
-	mux.HandleFunc("/next", app.handleNext)
-	mux.HandleFunc("/serve", app.handleServe)
-	mux.HandleFunc("/status/", app.handleStatus)
-	mux.HandleFunc("/clear", app.handleClear) // New endpoint to clear queue
+
+	// Public endpoint
+	mux.HandleFunc("/join", enableCors(app.handleJoin))
+
+	// Customer endpoints (require JWT)
+	mux.HandleFunc("/status/", enableCors(auth.AuthMiddleware(app.handleStatus)))
+
+	// Admin endpoints (require API key)
+	mux.HandleFunc("/queue", enableCors(auth.AdminAuthMiddleware(app.handleQueue)))
+	mux.HandleFunc("/next", enableCors(auth.AdminAuthMiddleware(app.handleNext)))
+	mux.HandleFunc("/serve", enableCors(auth.AdminAuthMiddleware(app.handleServe)))
+	mux.HandleFunc("/clear", enableCors(auth.AdminAuthMiddleware(app.handleClear)))
 
 	log.Println("Starting server on port 8080")
 	if err := http.ListenAndServe(":8080", mux); err != nil {

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wait-to-Go Demo</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Wait-to-Go Demo</h1>
+            <nav>
+                <button id="joinQueueBtn" class="active">Join Queue</button>
+                <button id="checkStatusBtn">Check Status</button>
+                <button id="adminBtn">Admin</button>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Join Queue Form -->
+            <section id="joinQueueSection" class="active">
+                <h2>Join the Queue</h2>
+                <form id="joinForm">
+                    <div class="form-group">
+                        <label for="firstName">First Name *</label>
+                        <input type="text" id="firstName" name="firstName" required maxlength="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name *</label>
+                        <input type="text" id="lastName" name="lastName" required maxlength="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email (optional)</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number (optional)</label>
+                        <input type="tel" id="phoneNumber" name="phoneNumber" maxlength="10">
+                    </div>
+                    <button type="submit" class="primary-btn">Join Queue</button>
+                </form>
+            </section>
+
+            <!-- Check Status Section -->
+            <section id="checkStatusSection" class="hidden">
+                <h2>Check Your Status</h2>
+                <form id="statusForm">
+                    <div class="form-group">
+                        <label for="queueId">Queue ID</label>
+                        <input type="number" id="queueId" name="queueId" required>
+                    </div>
+                    <button type="submit" class="primary-btn">Check Status</button>
+                </form>
+                <div id="statusResult" class="hidden">
+                    <h3>Your Status</h3>
+                    <p id="statusMessage"></p>
+                </div>
+            </section>
+
+            <!-- Admin Section -->
+            <section id="adminSection" class="hidden">
+                <h2>Queue Management</h2>
+                <div class="admin-controls">
+                    <button id="nextInQueue" class="secondary-btn">Next in Queue</button>
+                    <button id="clearQueue" class="danger-btn">Clear Queue</button>
+                </div>
+                <div id="queueList">
+                    <h3>Current Queue</h3>
+                    <div id="queueEntries"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2024 Wait-to-Go Demo. Open Source Queue Management System.</p>
+        </footer>
+    </div>
+
+    <!-- Notification toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="scripts/mock-api.js"></script>
+    <script src="scripts/ui.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html> 

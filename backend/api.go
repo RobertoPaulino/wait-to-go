@@ -6,7 +6,26 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
+	"wait-to-go/auth"
 )
+
+// CORS middleware
+func enableCors(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-API-Key")
+		w.Header().Set("Access-Control-Expose-Headers", "Authorization")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next(w, r)
+	}
+}
 
 func (a *App) handleJoin(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
@@ -24,9 +43,9 @@ func (a *App) handleJoin(w http.ResponseWriter, r *http.Request) {
 	entry.Status = StatusWaiting
 	entry.JoinTime = time.Now()
 
-	//validate we have a name
-	if (entry.FirstName == "") || (len(entry.FirstName) > 30) || (entry.LastName == "") || (len(entry.LastName) > 30) {
-		http.Error(w, "Invalid name fields", http.StatusBadRequest)
+	//validate we have a name and phone number
+	if (entry.FirstName == "") || (len(entry.FirstName) > 30) || (entry.LastName == "") || (len(entry.LastName) > 30) || (entry.PhoneNumber == "") {
+		http.Error(w, "Invalid name fields or missing phone number", http.StatusBadRequest)
 		return
 	}
 
@@ -36,11 +55,19 @@ func (a *App) handleJoin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Generate JWT token
+	token, err := auth.GenerateToken(id, entry.PhoneNumber)
+	if err != nil {
+		http.Error(w, "Failed to generate token", http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"status": "success",
 		"id":     id,
+		"token":  token,
 	})
 }
 
@@ -118,6 +145,19 @@ func (a *App) handleStatus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Get claims from context (set by auth middleware)
+	claims, ok := auth.GetClaimsFromContext(r.Context())
+	if !ok {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	// Verify that the token matches the requested entry
+	if claims.ID != entryID {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
 	entry, err := getEntryByID(a.db, entryID)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -128,8 +168,27 @@ func (a *App) handleStatus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Calculate position in queue
+	position := 0
+	if entry.Status == StatusWaiting {
+		for _, e := range *a.queue {
+			if e.Status == StatusWaiting && e.JoinTime.Before(entry.JoinTime) {
+				position++
+			}
+		}
+		position++ // Add 1 because we want 1-based position
+	}
+
+	response := struct {
+		Entry    Entry `json:"entry"`
+		Position int   `json:"position"`
+	}{
+		Entry:    entry,
+		Position: position,
+	}
+
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(entry)
+	json.NewEncoder(w).Encode(response)
 }
 
 func (a *App) handleClear(w http.ResponseWriter, r *http.Request) {

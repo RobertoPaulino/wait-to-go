@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wait-to-Go Queue System</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Wait-to-Go Queue System</h1>
+        </header>
+
+        <main>
+            <section class="join-section">
+                <h2>Join the Queue</h2>
+                <form id="joinForm">
+                    <div class="form-group">
+                        <label for="firstName">First Name:</label>
+                        <input type="text" id="firstName" name="firstName" required maxlength="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" id="lastName" name="lastName" required maxlength="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email (optional):</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number:</label>
+                        <input type="tel" id="phoneNumber" name="phoneNumber" required>
+                    </div>
+                    <button type="submit" class="primary-btn">Join Queue</button>
+                </form>
+            </section>
+
+            <section class="status-section">
+                <h2>Check Your Status</h2>
+                <form id="statusForm">
+                    <div class="form-group">
+                        <label for="queueId">Your Queue ID:</label>
+                        <input type="number" id="queueId" name="queueId" required>
+                    </div>
+                    <button type="submit" class="primary-btn">Check Status</button>
+                </form>
+                <div id="statusResult" class="hidden">
+                    <h3>Your Status</h3>
+                    <p id="statusMessage"></p>
+                </div>
+            </section>
+
+            <section class="admin-section">
+                <h2>Admin Area</h2>
+                <div class="admin-login" id="adminLoginSection">
+                    <form id="adminLoginForm">
+                        <div class="form-group">
+                            <label for="adminKey">Admin API Key:</label>
+                            <input type="password" id="adminKey" name="adminKey" required>
+                        </div>
+                        <button type="submit" class="primary-btn">Login</button>
+                    </form>
+                </div>
+                
+                <div class="admin-controls admin-only hidden">
+                    <button id="logoutBtn" class="secondary-btn" onclick="ui.handleAdminLogout()">Logout</button>
+                    <button id="nextInQueue" class="primary-btn">Next in Queue</button>
+                    <button id="clearQueue" class="danger-btn">Clear Queue</button>
+                    
+                    <div class="queue-list">
+                        <h3>Current Queue</h3>
+                        <div id="queueEntries"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="scripts/api.js"></script>
+    <script src="scripts/ui.js"></script>
+</body>
+</html> 
